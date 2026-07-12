@@ -1,0 +1,1314 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden; /* safety net: nothing on the page can force a horizontal scrollbar */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f8fafc;
+}
+
+.dash-root {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 240px;
+    background: #0f172a;
+    color: white;
+    padding: 20px 0;
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px 20px;
+}
+
+.logo-icon {
+    width: 35px;
+    height: 35px;
+    background: #2563eb;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.logo-text span {
+    color: #facc15;
+}
+
+.sidebar-section-label {
+    padding: 20px 20px 10px;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 12px 20px;
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    background: #1e293b;
+}
+
+.nav-item.active {
+    background: #2563eb;
+}
+
+/* MAIN */
+
+.main {
+    flex: 1;
+    min-width: 0; /* prevents flex item from refusing to shrink below its content's intrinsic width */
+}
+
+/* TOPBAR */
+
+.topbar {
+    height: 70px;
+    background: white;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 30px;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.page-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    background: #f1f5f9;
+
+    padding: 10px 15px;
+
+    border-radius: 10px;
+}
+
+.search-box input {
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+
+    background: #f1f5f9;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* CONTENT */
+
+.content {
+    padding: 30px;
+    max-width: 100%;
+}
+
+/* BALANCE CARDS */
+
+.balance-card {
+    border-radius: 15px;
+    padding: 25px;
+}
+
+.balance-card.usd {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+}
+
+.balance-card.trx {
+    background: #fef9c3;
+    border: 1px solid #fde68a;
+}
+
+.balance-card.pkr {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+.bc-icon {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 20px;
+}
+
+.bc-icon i {
+    font-size: 24px;
+}
+
+.bc-icon.usd {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.bc-icon.trx {
+    background: #fef08a;
+    color: #b45309;
+}
+
+.bc-icon.pkr {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.bc-label {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 10px;
+}
+
+.bc-amount {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.bc-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.bc-change.up {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.bc-change.dn {
+    background: #fee2e2;
+    color: #dc2626;
+}
+/* STATS ROW */
+
+.stats-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    border: 1px solid #e2e8f0;
+}
+
+.stats-icon {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stats-icon i {
+    font-size: 24px;
+}
+
+.stats-icon.blue {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.stats-icon.green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.stats-icon.yellow {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.stats-icon.red {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.stats-label {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.stats-value {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 4px 0;
+}
+
+.stats-sub {
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.success {
+    color: #16a34a;
+}
+
+.green-text {
+    color: #16a34a;
+}
+
+/* MARKET OVERVIEW */
+
+.market-wrapper {
+    margin-top: 20px;
+}
+
+.market-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid #e2e8f0;
+}
+
+.market-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.market-header h4 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.market-header p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.market-header a {
+    text-decoration: none;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.coin-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.coin-row:last-child {
+    border-bottom: none;
+}
+
+.coin-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.coin-icon {
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+    color: white;
+
+    flex-shrink: 0;
+}
+
+.coin-icon.bitcoin {
+    background: #f7931a;
+}
+
+.coin-icon.eth {
+    background: #627eea;
+}
+
+.coin-icon.trx {
+    background: #ef4444;
+}
+
+.coin-icon.bnb {
+    background: #f3ba2f;
+}
+
+.coin-name {
+    font-weight: 600;
+}
+
+.coin-symbol {
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.coin-chart {
+    width: 120px;
+    height: 40px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.coin-chart.up {
+    background: linear-gradient(to right, #dcfce7, #16a34a);
+}
+
+.coin-chart.down {
+    background: linear-gradient(to right, #fee2e2, #dc2626);
+}
+
+.coin-right {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.coin-price {
+    font-weight: bold;
+}
+
+.coin-change {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.success {
+    color: #16a34a;
+}
+
+.danger {
+    color: #dc2626;
+}
+/* TRANSACTIONS */
+
+.transactions-wrapper {
+    margin-top: 20px;
+}
+
+.transactions-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid #e2e8f0;
+}
+
+.transactions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.transactions-header h4 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.transactions-header p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.transactions-header a {
+    text-decoration: none;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.transactions-table thead th {
+    border: none;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+    padding-bottom: 15px;
+}
+
+.transactions-table tbody td {
+    padding: 18px 10px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 14px;
+}
+
+.txn-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.txn-badge.buy {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.txn-badge.sell {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.txn-badge.swap {
+    background: #ede9fe;
+    color: #7c3aed;
+}
+
+.txn-badge.deposit {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.status {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.success-status {
+    color: #16a34a;
+}
+
+.pending-status {
+    color: #d97706;
+}
+
+/* SWAP + PORTFOLIO */
+
+.swap-card,
+.portfolio-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid #e2e8f0;
+    height: 100%;
+}
+
+.section-header {
+    margin-bottom: 25px;
+}
+
+.section-header h4 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.section-header p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.swap-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.swap-label {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 10px;
+}
+
+.swap-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.swap-coin {
+    background: #f7931a;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.swap-coin.trx {
+    background: #ef4444;
+}
+
+.swap-flex input {
+    border: none;
+    background: none;
+    outline: none;
+    text-align: right;
+    font-size: 22px;
+    font-weight: bold;
+    width: 150px;
+    max-width: 100%;
+}
+
+.swap-center {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.swap-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swap-rate {
+    text-align: center;
+    color: #64748b;
+    margin: 20px 0;
+}
+
+.swap-btn {
+    width: 100%;
+    border: none;
+    background: #2563eb;
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.portfolio-btn {
+    border: none;
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.portfolio-chart {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.chart-circle {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+
+    background: conic-gradient(
+        #f7931a 0% 42%,
+        #627eea 42% 70%,
+        #ef4444 70% 88%,
+        #22c55e 88% 100%
+    );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-inner {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.asset-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+.asset-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.asset-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.asset-dot.btc {
+    background: #f7931a;
+}
+
+.asset-dot.eth {
+    background: #627eea;
+}
+
+.asset-dot.trx {
+    background: #ef4444;
+}
+
+.asset-dot.usdt {
+    background: #22c55e;
+}
+
+.asset-percent {
+    font-weight: 600;
+}
+
+/* MOBILE SIDEBAR */
+
+.menu-toggle {
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #f1f5f9;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.5);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: 0.3s;
+
+    z-index: 998;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+@media (max-width: 991px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    .sidebar {
+        position: fixed;
+
+        left: -260px;
+        top: 0;
+
+        height: 100vh;
+
+        z-index: 999;
+
+        transition: 0.3s;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .search-box {
+        display: none;
+    }
+
+    .topbar {
+        padding: 0 15px;
+    }
+
+    .content {
+        padding: 15px;
+    }
+
+    /* ---- Component scaling: everything below is new, desktop (>991px) is untouched ---- */
+
+    /* Cards: desktop padding (20-25px) is too generous once a card is full viewport width */
+    .balance-card,
+    .stats-card,
+    .market-card,
+    .transactions-card,
+    .swap-card,
+    .portfolio-card {
+        padding: 18px;
+    }
+
+    /* Balance cards */
+    .bc-icon {
+        width: 42px;
+        height: 42px;
+        margin-bottom: 14px;
+    }
+
+    .bc-icon i {
+        font-size: 20px;
+    }
+
+    .bc-amount {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+
+    .bc-label {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .bc-change {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+
+    /* Stats row */
+    .stats-card {
+        gap: 12px;
+    }
+
+    .stats-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .stats-icon i {
+        font-size: 20px;
+    }
+
+    .stats-value {
+        font-size: 20px;
+        margin: 3px 0;
+    }
+
+    .stats-label,
+    .stats-sub {
+        font-size: 12px;
+    }
+
+    /* Shared card headers (market / transactions / swap / portfolio) */
+    .market-header h4,
+    .transactions-header h4,
+    .section-header h4 {
+        font-size: 17px;
+    }
+
+    .market-header p,
+    .transactions-header p,
+    .section-header p {
+        font-size: 13px;
+    }
+
+    /* Market overview: this is the primary horizontal-overflow fix.
+       .coin-row is a flex row with a fixed-width chart and no shrink rules,
+       so on narrow screens it was wider than its container. Shrinking the
+       chart, letting the icon refuse to shrink, and letting the name/symbol
+       truncate instead of forcing extra width fixes the page-wide scroll. */
+    .coin-row {
+        gap: 8px;
+        padding: 12px 0;
+    }
+
+    .coin-left {
+        gap: 10px;
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .coin-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .coin-name {
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 110px;
+    }
+
+    .coin-symbol {
+        font-size: 12px;
+    }
+
+    .coin-chart {
+        width: 70px;
+        height: 30px;
+    }
+
+    .coin-price {
+        font-size: 14px;
+    }
+
+    .coin-change {
+        font-size: 12px;
+    }
+
+    /* Transactions table */
+    .transactions-table thead th {
+        font-size: 12px;
+        padding-bottom: 10px;
+    }
+
+    .transactions-table tbody td {
+        padding: 12px 8px;
+        font-size: 13px;
+    }
+
+    .txn-badge {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+
+    /* Swap card */
+    .swap-box {
+        padding: 12px;
+    }
+
+    .swap-flex input {
+        font-size: 18px;
+    }
+
+    .swap-coin {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .swap-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .swap-btn {
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .portfolio-btn {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    /* Portfolio chart: 180px was fixed regardless of viewport */
+    .chart-circle {
+        width: 150px;
+        height: 150px;
+    }
+
+    .chart-inner {
+        width: 100px;
+        height: 100px;
+        font-size: 24px;
+    }
+
+    .asset-row {
+        margin-bottom: 12px;
+    }
+
+    .asset-percent {
+        font-size: 14px;
+    }
+
+    /* Topbar */
+    .icon-btn,
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+    }
+
+    .page-title {
+        font-size: 18px;
+    }
+
+    /* Generic Bootstrap tables/cards used on plain pages like
+       Transaction History and Wallet (these don't use the custom
+       .transactions-table / .balance-card classes above). Pair this
+       with a table-responsive wrapper in the blade file so any
+       remaining overflow scrolls inside the table instead of the page. */
+    .card-header h4 {
+        font-size: 17px;
+    }
+
+    .card .table td,
+    .card .table th,
+    .container .table td,
+    .container .table th {
+        padding: 8px 6px;
+        font-size: 13px;
+    }
+
+    .card-body.p-0 .table td,
+    .card-body.p-0 .table th {
+        padding: 8px 10px;
+    }
+
+    .table .btn-sm {
+        padding: 4px 8px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    /* Wallet action buttons: not enough width for side-by-side on
+       tablets/phones, so stack them deliberately with a wrapper
+       (.wallet-actions, added around the two <a> tags in the blade)
+       instead of letting them wrap awkwardly on their own. */
+    .wallet-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .wallet-actions .btn-sm {
+        width: 78px;
+        text-align: center;
+    }
+}
+
+/* MOBILE IMPROVEMENTS */
+
+.sidebar-close {
+    display: none;
+}
+
+@media (max-width: 991px) {
+    .sidebar {
+        width: 220px;
+
+        left: -220px;
+
+        position: fixed;
+        top: 0;
+
+        height: 100vh;
+
+        z-index: 999;
+
+        transition: all 0.35s ease;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+    .sidebar-close {
+        display: flex;
+
+        position: absolute;
+
+        top: 15px;
+
+        right: 15px;
+
+        width: 38px;
+
+        height: 38px;
+
+        border: none;
+
+        border-radius: 8px;
+
+        background: rgba(255, 255, 255, 0.15);
+
+        color: #fff;
+
+        align-items: center;
+
+        justify-content: center;
+
+        cursor: pointer;
+
+        z-index: 1001;
+    }
+
+    .sidebar-close:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+}
+
+@media (max-width: 576px) {
+    .bc-amount {
+        font-size: 20px;
+    }
+
+    .chart-circle {
+        width: 120px;
+        height: 120px;
+    }
+
+    .chart-inner {
+        width: 80px;
+        height: 80px;
+        font-size: 18px;
+    }
+
+    .swap-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .swap-flex input {
+        width: 100%;
+        text-align: left;
+        font-size: 16px;
+    }
+
+    .user-btn-name {
+        display: none;
+    }
+    .sidebar {
+        width: 200px;
+
+        left: -200px;
+    }
+    .sidebar-logo {
+        padding: 15px;
+    }
+
+    .logo-text {
+        font-size: 18px;
+    }
+
+    /* Extra-small-phone refinements on top of the 991px scaling above */
+    .balance-card,
+    .stats-card,
+    .market-card,
+    .transactions-card,
+    .swap-card,
+    .portfolio-card {
+        padding: 14px;
+    }
+
+    .coin-chart {
+        width: 46px;
+        height: 26px;
+    }
+
+    .coin-name {
+        max-width: 80px;
+        font-size: 13px;
+    }
+
+    .coin-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+
+    .transactions-table thead th {
+        font-size: 11px;
+        padding-bottom: 8px;
+    }
+
+    .transactions-table tbody td {
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+
+    .txn-badge {
+        padding: 3px 8px;
+        font-size: 11px;
+    }
+
+    /* Wallet page: keep buttons inline (side by side), just tighten
+       them and the cell padding so the row fits closer to viewport
+       width and needs less horizontal scroll inside table-responsive. */
+    .card .table td,
+    .card .table th,
+    .container .table td,
+    .container .table th {
+        padding: 6px 5px;
+        font-size: 12px;
+    }
+
+    .table .btn-sm {
+        padding: 3px 6px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .wallet-actions .btn-sm {
+        width: 70px;
+    }
+}
+.txn-badge.deposit {
+    background: rgba(34, 197, 94, 0.15);
+}
+
+.txn-badge.withdrawal {
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.txn-badge.swap {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+/* copy icon  */
+.copy-icon {
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.copy-icon:hover {
+    opacity: 0.7;
+}
+
+.sidebar .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: #ffffff;
+    text-decoration: none;
+
+    padding: 12px 16px;
+
+    border-radius: 10px;
+
+    margin-bottom: 6px;
+
+    transition: all 0.3s ease;
+}
+.sidebar .nav-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+
+    color: #ffffff;
+
+    text-decoration: none;
+}
+.sidebar .nav-item.active {
+    background: #f6c343;
+
+    color: #111827;
+
+    font-weight: 600;
+}
+.sidebar .nav-item i {
+    font-size: 20px;
+}
+.sidebar .nav-item span {
+    font-size: 15px;
+}
+.logout-btn {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.logout-btn i,
+.logout-btn span {
+    color: inherit;
+}
