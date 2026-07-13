@@ -1,58 +1,126 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+# Crypto-X — Crypto Exchange Dashboard
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+A crypto exchange dashboard built with **Laravel 12**, **Bootstrap 5**, and **Blade components** — featuring wallet balances, live market overview, buy/sell orders, deposits & withdrawals, a quick-swap tool, transaction history, and a full admin panel for managing the platform.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### User side
+- **Dashboard** — USDT / TRX / PKR wallet balance cards, key stats (portfolio value, profit, trades, security score), live market overview, recent transactions, quick swap, and portfolio breakdown chart
+- **Buy / Sell Crypto** — place buy and sell orders
+- **Deposit / Withdraw** — fund and withdraw from wallets
+- **Wallet** — view balances across all currencies with quick deposit/withdraw actions
+- **Transaction History** — full log of all account activity
+- **Quick Swap** — instantly exchange between supported currencies
+- **Authentication** — register, login, email verification, password reset, profile management (via Laravel's built-in auth scaffolding)
 
-## Learning Laravel
+### Admin side
+- Admin dashboard with platform-wide overview
+- Manage buy orders, sell orders, deposits, and withdrawals
+- Manage exchange rates
+- Role-based access via `AdminMiddleware`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Tech Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Backend:** Laravel 12 (PHP)
+- **Frontend:** Blade templates, Bootstrap 5, custom CSS (`public/assets/css/dashboard.css`)
+- **Icons:** Tabler Icons
+- **Build tooling:** Vite
+- **Database:** MySQL (via Laravel migrations & seeders)
 
-## Laravel Sponsors
+## Project Structure
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```
+app/
+  Http/Controllers/          # Buy, Sell, Deposit, Withdrawal, Wallet, Swap, Transaction, Dashboard controllers
+  Http/Controllers/Admin/    # Admin-side controllers
+  Http/Middleware/           # AdminMiddleware for role-based access
+  Models/                    # User, Wallet, Transaction, Deposit, Withdrawal, BuyOrder, SellOrder, ExchangeRate...
 
-### Premium Partners
+resources/views/
+  layouts/app.blade.php      # Main dashboard layout
+  partials/sidebar.blade.php # Sidebar navigation
+  partials/topbar.blade.php  # Topbar navigation
+  components/                # balance-cards, stats-row, market-overview, transactions-table, swap-portfolio, wallet-history
+  admin/                     # Admin panel views
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+public/assets/
+  css/dashboard.css          # Custom dashboard styling (responsive, desktop + mobile)
+  js/dashboard.js            # Dashboard interactivity (sidebar toggle, swap calculator, etc.)
 
-## Contributing
+database/
+  migrations/                # wallets, transactions, deposits, withdrawals, buy/sell orders, exchange rates
+  seeders/                   # WalletSeeder, TransactionSeeder
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Installation
 
-## Code of Conduct
+### Prerequisites
+- PHP >= 8.2
+- Composer
+- Node.js & npm
+- MySQL (or your preferred Laravel-supported database)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Setup
 
-## Security Vulnerabilities
+```bash
+# 1. Clone the repository
+git clone https://github.com/Qanu91/crypto-X.git
+cd crypto-X
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 2. Install PHP dependencies
+composer install
+
+# 3. Install JS dependencies
+npm install
+
+# 4. Copy the environment file and configure it
+cp .env.example .env
+
+# 5. Generate the application key
+php artisan key:generate
+
+# 6. Configure your database credentials in .env
+#    DB_DATABASE=crypto_exchange
+#    DB_USERNAME=root
+#    DB_PASSWORD=
+
+# 7. Run migrations and seed sample data
+php artisan migrate --seed
+
+# 8. Build frontend assets
+npm run dev
+# or for production
+npm run build
+
+# 9. Serve the application
+php artisan serve
+```
+
+The app will be available at `http://localhost:8000`.
+
+## Environment Variables
+
+Key variables to set in your `.env` file (see `.env.example` for the full list):
+
+| Variable | Description |
+|---|---|
+| `APP_URL` | Base URL of the application |
+| `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Database credentials |
+| `MAIL_*` | Mail settings, used for email verification and password reset |
+
+⚠️ **Never commit your real `.env` file.** It's excluded via `.gitignore` — only `.env.example` (with placeholder values) is tracked in this repo.
+
+## Admin Access
+
+After seeding, promote a user to admin by setting their `role` column to `admin` in the `users` table, then log in and visit the admin routes to manage deposits, withdrawals, orders, and exchange rates.
+
+## Responsive Design
+
+The dashboard is fully responsive — desktop layout is preserved as designed, with dedicated mobile breakpoints (`991px` and `576px`) for cards, tables, buttons, and charts to ensure no horizontal overflow and a clean experience on phones and tablets.
+
+
 
 ## License
 
