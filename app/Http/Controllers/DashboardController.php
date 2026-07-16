@@ -21,37 +21,27 @@ $transactions = auth()->user()
     ->latest()
     ->take(5)
     ->get();
-// $response = Http::get(
-//     'https://api.coingecko.com/api/v3/simple/price',
-//     [
-//         'ids' => 'tether,tron',
-//         'vs_currencies' => 'usd',
-//     ]
-// );
+$response = Http::get(
+    'https://api.coingecko.com/api/v3/simple/price',
+    [
+        'ids' => 'tether,tron',
+        'vs_currencies' => 'usd',
+    ]
+);
 
-// $exchangeResponse = Http::get(
-//     'https://open.er-api.com/v6/latest/USD'
-// );
+$exchangeResponse = Http::get(
+    'https://open.er-api.com/v6/latest/USD'
+);
 
-// $exchangeData = $exchangeResponse->json();
+$exchangeData = $exchangeResponse->json();
 
-// $usdToPkr = $exchangeData['rates']['PKR'] ?? 280;
+$usdToPkr = $exchangeData['rates']['PKR'] ?? 280;
 
-// $prices = $response->json();
+$prices = $response->json();
 
-// $usdtPrice = $prices['tether']['usd'] ?? 1;
-// $trxPrice  = $prices['tron']['usd'] ?? 0;
-// $usdtPricePkr = $usdtPrice * $usdToPkr;
-// $trxPricePkr = $trxPrice * $usdToPkr;
-
-$usdToPkr = 280;
-
-$usdtPrice = 1;
-
-$trxPrice = 0.28;
-
+$usdtPrice = $prices['tether']['usd'] ?? 1;
+$trxPrice  = $prices['tron']['usd'] ?? 0;
 $usdtPricePkr = $usdtPrice * $usdToPkr;
-
 $trxPricePkr = $trxPrice * $usdToPkr;
 
 $swapRates = [
