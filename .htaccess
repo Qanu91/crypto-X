@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # InfinityFree serves htdocs as the web root. Send all requests into
+    # Laravel's public directory while keeping Laravel's normal paths intact.
+    RewriteRule ^(?!public/)(.*)$ public/$1 [L]
+</IfModule>

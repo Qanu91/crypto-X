@@ -21,7 +21,11 @@ use App\Http\Controllers\Admin\AdminExchangeRateController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return redirect()->route('register');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])

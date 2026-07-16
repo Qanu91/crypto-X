@@ -9,7 +9,7 @@ class Wallet extends Model
     protected $fillable = [
         'user_id',
         'currency',
-        'balance'
+        'balance',
     ];
 
     public function user()
@@ -17,4 +17,3 @@ class Wallet extends Model
         return $this->belongsTo(User::class);
     }
 }
-
