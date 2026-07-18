@@ -1,0 +1,154 @@
+# ==============================================================
+# docker-compose.yml — Local development stack
+# Mirrors the production setup on Render as closely as possible
+# ==============================================================
+# Usage:
+#   docker compose up --build          (first run)
+#   docker compose up -d               (subsequent runs)
+#   docker compose down -v             (stop + remove volumes)
+#   docker compose exec app sh         (shell into app container)
+#   docker compose exec app php artisan tinker
+# ==============================================================
+
+services:
+
+  # ------------------------------------------------------------
+  # App — Laravel (Nginx + PHP-FPM + Supervisor)
+  # ------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: crypto-exchange:local
+    container_name: crypto-exchange-app
+    restart: unless-stopped
+    ports:
+      # Map host 8080 → container 8080 (matches Render's PORT)
+      - "8080:8080"
+    environment:
+      # Core Laravel
+      APP_NAME: "Crypto Exchange"
+      APP_ENV: local
+      APP_KEY: "${APP_KEY}"
+      APP_DEBUG: "true"
+      APP_URL: "http://localhost:8080"
+
+      # Logging — write to stderr so docker logs works
+      LOG_CHANNEL: stderr
+      LOG_LEVEL: debug
+
+      # Database — points to the mysql service below
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: "${DB_DATABASE:-crypto_exchange}"
+      DB_USERNAME: "${DB_USERNAME:-crypto_user}"
+      DB_PASSWORD: "${DB_PASSWORD:-secret}"
+
+      # Cache / Queue / Session — all database-backed (no Redis needed)
+      CACHE_STORE: database
+      QUEUE_CONNECTION: database
+      SESSION_DRIVER: database
+      SESSION_LIFETIME: 120
+
+      # Port Render injects — set explicitly for local dev
+      PORT: 8080
+
+      # Startup behaviour
+      WAIT_FOR_DB: "true"
+      RUN_MIGRATIONS: "true"
+
+      # Mail — log driver for local dev (no actual emails sent)
+      MAIL_MAILER: log
+      MAIL_FROM_ADDRESS: "noreply@crypto-exchange.local"
+      MAIL_FROM_NAME: "Crypto Exchange"
+
+      # Filesystem
+      FILESYSTEM_DISK: local
+    volumes:
+      # Persist uploaded files and logs across restarts
+      - app_storage:/var/www/html/storage/app
+      - app_logs:/var/www/html/storage/logs
+      # Mount source code for live editing (comment out for prod-parity testing)
+      # - .:/var/www/html:cached
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - crypto-net
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+
+  # ------------------------------------------------------------
+  # MySQL 8.0 — matches a typical managed MySQL on Render/PlanetScale
+  # ------------------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    container_name: crypto-exchange-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-rootsecret}"
+      MYSQL_DATABASE: "${DB_DATABASE:-crypto_exchange}"
+      MYSQL_USER: "${DB_USERNAME:-crypto_user}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-secret}"
+    ports:
+      # Expose MySQL to host so you can connect with TablePlus / DBeaver
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - crypto-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ------------------------------------------------------------
+  # phpMyAdmin — optional DB GUI (remove in prod)
+  # Access at http://localhost:8081
+  # ------------------------------------------------------------
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: crypto-exchange-pma
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: "${DB_ROOT_PASSWORD:-rootsecret}"
+      UPLOAD_LIMIT: 50M
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - crypto-net
+    profiles:
+      # Only start with: docker compose --profile tools up
+      - tools
+
+# --------------------------------------------------------------
+# Named volumes — persist data between container restarts
+# --------------------------------------------------------------
+volumes:
+  mysql_data:
+    driver: local
+  app_storage:
+    driver: local
+  app_logs:
+    driver: local
+
+# --------------------------------------------------------------
+# Networks
+# --------------------------------------------------------------
+networks:
+  crypto-net:
+    driver: bridge
