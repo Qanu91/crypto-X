@@ -32,17 +32,29 @@ envsubst '${NGINX_PORT}' \
 ok "Nginx config written."
 
 # --------------------------------------------------------------
-# 3. Ensure required .env file exists
+# 3. Handle .env file
+#    On Railway/Render, env vars are injected directly into the
+#    environment — no .env file is needed or wanted.
+#    Only create one if APP_KEY is not already in the environment
+#    (i.e. running locally without proper env vars set).
 # --------------------------------------------------------------
 if [ ! -f /var/www/html/.env ]; then
-    if [ -f /var/www/html/.env.example ]; then
-        warn ".env not found — copying from .env.example"
+    if [ -n "${APP_KEY}" ]; then
+        # Railway/Render: env vars injected — write a minimal .env
+        # so Laravel's bootstrap doesn't complain about missing file
+        log "No .env file — creating minimal one from environment..."
+        printenv | grep -E "^(APP_|DB_|CACHE_|QUEUE_|SESSION_|LOG_|MAIL_|REDIS_|BROADCAST_|FILESYSTEM_|BCRYPT_|VITE_)" \
+            > /var/www/html/.env
+        ok ".env created from environment variables."
+    elif [ -f /var/www/html/.env.example ]; then
+        warn ".env not found and APP_KEY not set — copying from .env.example (local dev only)"
         cp /var/www/html/.env.example /var/www/html/.env
     else
-        fail ".env file is missing and no .env.example found. Aborting."
+        fail ".env file is missing and APP_KEY not set. Aborting."
     fi
+else
+    ok ".env file present."
 fi
-ok ".env file present."
 
 # --------------------------------------------------------------
 # 4. Fix ownership and permissions
