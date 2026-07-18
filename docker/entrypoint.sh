@@ -35,23 +35,40 @@ ok "Nginx config written."
 # 3. Handle .env file
 #    On Railway/Render, env vars are injected directly into the
 #    environment — no .env file is needed or wanted.
-#    Only create one if APP_KEY is not already in the environment
-#    (i.e. running locally without proper env vars set).
+#    Write a .env from environment so Laravel dotenv parser is happy.
 # --------------------------------------------------------------
 if [ ! -f /var/www/html/.env ]; then
-    if [ -n "${APP_KEY}" ]; then
-        # Railway/Render: env vars injected — write a minimal .env
-        # so Laravel's bootstrap doesn't complain about missing file
-        log "No .env file — creating minimal one from environment..."
-        printenv | grep -E "^(APP_|DB_|CACHE_|QUEUE_|SESSION_|LOG_|MAIL_|REDIS_|BROADCAST_|FILESYSTEM_|BCRYPT_|VITE_)" \
-            > /var/www/html/.env
-        ok ".env created from environment variables."
-    elif [ -f /var/www/html/.env.example ]; then
-        warn ".env not found and APP_KEY not set — copying from .env.example (local dev only)"
-        cp /var/www/html/.env.example /var/www/html/.env
-    else
-        fail ".env file is missing and APP_KEY not set. Aborting."
-    fi
+    log "No .env file — creating from environment variables..."
+    ENV_FILE=/var/www/html/.env
+
+    # Write each relevant env var as KEY="VALUE" (quoted) so
+    # Laravel's dotenv parser handles spaces and special chars correctly
+    for VAR in \
+        APP_NAME APP_ENV APP_KEY APP_DEBUG APP_URL \
+        APP_LOCALE APP_FALLBACK_LOCALE APP_FAKER_LOCALE \
+        APP_MAINTENANCE_DRIVER BCRYPT_ROUNDS \
+        LOG_CHANNEL LOG_STACK LOG_DEPRECATIONS_CHANNEL LOG_LEVEL \
+        DB_CONNECTION DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD DB_URL \
+        CACHE_STORE QUEUE_CONNECTION \
+        SESSION_DRIVER SESSION_LIFETIME SESSION_ENCRYPT SESSION_PATH SESSION_DOMAIN \
+        BROADCAST_CONNECTION FILESYSTEM_DISK \
+        MAIL_MAILER MAIL_SCHEME MAIL_HOST MAIL_PORT \
+        MAIL_USERNAME MAIL_PASSWORD MAIL_FROM_ADDRESS MAIL_FROM_NAME \
+        REDIS_CLIENT REDIS_HOST REDIS_PASSWORD REDIS_PORT \
+        AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION \
+        AWS_BUCKET AWS_USE_PATH_STYLE_ENDPOINT \
+        VITE_APP_NAME \
+    ; do
+        # Only write if the variable is actually set
+        eval "VAL=\${$VAR+x}"
+        if [ -n "$VAL" ]; then
+            eval "VAL=\${$VAR}"
+            # Quote the value to handle spaces safely
+            echo "$VAR=\"$VAL\"" >> "$ENV_FILE"
+        fi
+    done
+
+    ok ".env created from environment variables."
 else
     ok ".env file present."
 fi
