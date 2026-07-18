@@ -71,7 +71,22 @@ find /var/www/html/bootstrap/cache -type f -exec chmod 644 {} \;
 ok "Permissions set."
 
 # --------------------------------------------------------------
-# 5. Wait for the database to be reachable
+# 5. Auto-set APP_URL from Railway/Render provided domain if not set
+# --------------------------------------------------------------
+if [ -z "${APP_URL}" ] || [ "${APP_URL}" = "http://localhost" ] || [ "${APP_URL}" = "https://your-app.onrender.com" ]; then
+    # Railway injects RAILWAY_PUBLIC_DOMAIN automatically
+    if [ -n "${RAILWAY_PUBLIC_DOMAIN}" ]; then
+        export APP_URL="https://${RAILWAY_PUBLIC_DOMAIN}"
+        log "APP_URL auto-set to ${APP_URL} from RAILWAY_PUBLIC_DOMAIN"
+    # Render injects RENDER_EXTERNAL_URL automatically
+    elif [ -n "${RENDER_EXTERNAL_URL}" ]; then
+        export APP_URL="${RENDER_EXTERNAL_URL}"
+        log "APP_URL auto-set to ${APP_URL} from RENDER_EXTERNAL_URL"
+    fi
+fi
+
+# --------------------------------------------------------------
+# 6. Wait for the database to be reachable
 #    Controlled by WAIT_FOR_DB env var (set to "true" to enable)
 # --------------------------------------------------------------
 if [ "${WAIT_FOR_DB:-false}" = "true" ]; then
@@ -91,7 +106,7 @@ if [ "${WAIT_FOR_DB:-false}" = "true" ]; then
 fi
 
 # --------------------------------------------------------------
-# 6. Generate APP_KEY if missing
+# 7. Generate APP_KEY if missing
 # --------------------------------------------------------------
 APP_KEY_VALUE=$(grep -E "^APP_KEY=" /var/www/html/.env | cut -d= -f2)
 if [ -z "${APP_KEY_VALUE}" ] || [ "${APP_KEY_VALUE}" = '""' ]; then
