@@ -114,15 +114,16 @@ RUN rm -f /usr/local/etc/php-fpm.d/www.conf.default \
     && rm -f /usr/local/etc/php-fpm.d/zz-docker.conf
 
 # ---------- Nginx configuration ----------
-# Remove the default Nginx site
+# Alpine's nginx package uses /etc/nginx/http.d/ (not conf.d/)
+# Remove the default site and create the http.d directory
 RUN rm -f /etc/nginx/http.d/default.conf \
-    && rm -f /etc/nginx/conf.d/default.conf
+    && mkdir -p /etc/nginx/http.d
 
 # Store our config as a template; entrypoint runs envsubst to produce
-# the final conf with the correct PORT value
+# the final conf with the correct PORT value at runtime
 COPY docker/nginx/default.conf /etc/nginx/templates/default.conf.template
 
-# Point nginx to our log directory and set worker_processes
+# Write a clean nginx.conf that includes http.d/*.conf
 RUN echo "worker_processes auto;" > /etc/nginx/nginx.conf && \
     echo "error_log /var/log/nginx/error.log warn;" >> /etc/nginx/nginx.conf && \
     echo "pid /var/run/nginx.pid;" >> /etc/nginx/nginx.conf && \
@@ -133,7 +134,7 @@ RUN echo "worker_processes auto;" > /etc/nginx/nginx.conf && \
     echo "    sendfile on;" >> /etc/nginx/nginx.conf && \
     echo "    keepalive_timeout 65;" >> /etc/nginx/nginx.conf && \
     echo "    client_max_body_size 50M;" >> /etc/nginx/nginx.conf && \
-    echo "    include /etc/nginx/conf.d/*.conf;" >> /etc/nginx/nginx.conf && \
+    echo "    include /etc/nginx/http.d/*.conf;" >> /etc/nginx/nginx.conf && \
     echo "}" >> /etc/nginx/nginx.conf
 
 # ---------- Supervisor configuration ----------

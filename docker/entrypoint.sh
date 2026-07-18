@@ -28,7 +28,7 @@ export NGINX_PORT="${APP_PORT}"
 log "Writing Nginx config for port ${APP_PORT}..."
 envsubst '${NGINX_PORT}' \
     < /etc/nginx/templates/default.conf.template \
-    > /etc/nginx/conf.d/default.conf
+    > /etc/nginx/http.d/default.conf
 ok "Nginx config written."
 
 # --------------------------------------------------------------
