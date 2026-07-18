@@ -1,33 +1,13 @@
 # ==============================================================
 # Multi-stage Dockerfile — crypto-exchange Laravel 12
 # PHP 8.2-FPM + Nginx + Supervisor
-# Target: Render Web Service (port 8080)
+# Target: Railway / Render Web Service (port 8080)
+# NOTE: Frontend assets (public/build) are pre-built locally
+#       and committed to git — no Node build step needed here.
 # ==============================================================
 
 # --------------------------------------------------------------
-# Stage 1: Node — compile frontend assets (Vite build)
-# --------------------------------------------------------------
-FROM node:20-alpine AS node-builder
-
-WORKDIR /app
-
-# Copy only package files first for better layer caching
-COPY package.json package-lock.json* ./
-
-RUN npm ci --ignore-scripts
-
-# Copy the rest of the source needed for the build
-COPY resources/  ./resources/
-COPY public/     ./public/
-COPY vite.config.js* ./
-COPY tailwind.config.js* ./
-COPY postcss.config.js* ./
-
-RUN npm run build
-
-
-# --------------------------------------------------------------
-# Stage 2: Composer — install PHP dependencies (production only)
+# Stage 1: Composer — install PHP dependencies (production only)
 # --------------------------------------------------------------
 FROM composer:2.8 AS composer-builder
 
@@ -36,9 +16,7 @@ WORKDIR /app
 # Copy composer files first for layer caching
 COPY composer.json composer.lock ./
 
-# Install production dependencies only, with optimised autoloader
-# --ignore-platform-reqs lets the Composer image (which may lack
-# some extensions) resolve deps; the final stage has all extensions.
+# Install production dependencies only
 RUN composer install \
     --no-dev \
     --no-interaction \
@@ -47,7 +25,7 @@ RUN composer install \
     --prefer-dist \
     --ignore-platform-reqs
 
-# Copy the full application source, then dump the optimised autoloader
+# Copy full source then dump optimised autoloader
 COPY . .
 
 RUN composer dump-autoload \
@@ -57,8 +35,8 @@ RUN composer dump-autoload \
 
 
 # --------------------------------------------------------------
-# Stage 3: Final runtime image
-# PHP 8.2-FPM + Nginx + Supervisor in one container
+# Stage 2: Final runtime image
+# PHP 8.2-FPM + Nginx + Supervisor
 # --------------------------------------------------------------
 FROM php:8.2-fpm-alpine AS runtime
 
@@ -158,9 +136,6 @@ COPY --chown=www-data:www-data . .
 
 # Overwrite vendor/ with the production-only vendor from composer stage
 COPY --from=composer-builder --chown=www-data:www-data /app/vendor ./vendor
-
-# Overwrite public/build with the compiled Vite assets from node stage
-COPY --from=node-builder --chown=www-data:www-data /app/public/build ./public/build
 
 # ---------- Storage & bootstrap directories ----------
 # Ensure writable directories exist with correct ownership
