@@ -5,9 +5,21 @@
 set -e
 
 log()  { echo "[entrypoint] $*"; }
-ok()   { echo "[entrypoint] ✔ $*"; }
-warn() { echo "[entrypoint] ⚠ $*"; }
-fail() { echo "[entrypoint] ✘ $*" >&2; exit 1; }
+ok()   { echo "[entrypoint] OK $*"; }
+warn() { echo "[entrypoint] WARN $*"; }
+fail() { echo "[entrypoint] FAIL $*" >&2; exit 1; }
+
+# --------------------------------------------------------------
+# 0. Clean up stale runtime files from previous container
+#    (Railway reuses the overlay FS between redeploys which
+#     leaves stale PID/socket files that crash supervisord)
+# --------------------------------------------------------------
+log "Cleaning up stale runtime files..."
+rm -f /var/run/supervisord.pid
+rm -f /var/run/supervisor.sock
+rm -f /var/run/nginx.pid
+rm -f /var/run/php-fpm.pid
+ok "Stale files cleaned."
 
 # --------------------------------------------------------------
 # 1. Resolve PORT (Render/Railway inject this)
@@ -79,13 +91,15 @@ fi
 
 # --------------------------------------------------------------
 # 7. Cache config, routes, views
+# Wrapped in || true so a bad env var (e.g. missing APP_KEY)
+# does NOT crash the container — Laravel will still boot.
 # --------------------------------------------------------------
 log "Caching Laravel config, routes, and views..."
-su-exec www-data php /var/www/html/artisan config:cache
-su-exec www-data php /var/www/html/artisan route:cache
-su-exec www-data php /var/www/html/artisan view:cache
-su-exec www-data php /var/www/html/artisan event:cache
-ok "Laravel caches warmed."
+su-exec www-data php /var/www/html/artisan config:cache  || warn "config:cache failed — continuing anyway"
+su-exec www-data php /var/www/html/artisan route:cache   || warn "route:cache failed — continuing anyway"
+su-exec www-data php /var/www/html/artisan view:cache    || warn "view:cache failed — continuing anyway"
+su-exec www-data php /var/www/html/artisan event:cache   || warn "event:cache failed — continuing anyway"
+ok "Laravel caches done."
 
 # --------------------------------------------------------------
 # 8. Start Supervisor (Nginx + PHP-FPM + queue worker)

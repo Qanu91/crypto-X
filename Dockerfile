@@ -169,7 +169,7 @@ EXPOSE 8080
 
 # ---------- Health check ----------
 # /up is the Laravel default health endpoint (registered in bootstrap/app.php)
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=5 \
     CMD wget --no-verbose --tries=1 --spider "http://127.0.0.1:${PORT:-8080}/up" || exit 1
 
 ENTRYPOINT ["/entrypoint.sh"]
