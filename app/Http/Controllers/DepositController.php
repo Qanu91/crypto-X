@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Deposit;
 use App\Models\DepositAddress;
+use App\Models\PaymentAccount;
 
 class DepositController extends Controller
 {
@@ -16,10 +17,12 @@ class DepositController extends Controller
         ->get();
 
     $depositAddresses = DepositAddress::all();
+    $paymentAccounts = PaymentAccount::all();
 
     return view('deposit', compact(
         'deposits',
         'depositAddresses'
+         'paymentAccounts'
     ));
     }
     public function store(Request $request)

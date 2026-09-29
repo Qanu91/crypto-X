@@ -19,7 +19,7 @@
         </select>
     </div>
 
-    <div class="mb-3">
+    <div class="mb-3 id="crypto-address-section">
 
     <label>Deposit Address</label>
 
@@ -44,7 +44,27 @@
     </div>
 
 </div>
+<div class="mb-3" id="pkr-payment-section" style="display: none;">
 
+    <label>Payment Account</label>
+
+    @foreach($paymentAccounts as $account)
+        <div class="border rounded p-3 mb-2">
+
+            <strong>{{ $account->method }}</strong>
+
+            @if($account->bank_name)
+                <div>Bank: {{ $account->bank_name }}</div>
+            @endif
+
+            <div>Account Title: {{ $account->account_title }}</div>
+
+            <div>Account Number: {{ $account->account_number }}</div>
+
+        </div>
+    @endforeach
+
+</div>
     <div class="mb-3">
         <label>Amount</label>
 
@@ -122,8 +142,28 @@ const addresses = {
 document.getElementById('currency-select')
 .addEventListener('change', function() {
 
-    document.getElementById('deposit-address').value =
-        addresses[this.value];
+    const cryptoSection =
+        document.getElementById('crypto-address-section');
+
+    const pkrSection =
+        document.getElementById('pkr-payment-section');
+
+    const addressField =
+        document.getElementById('deposit-address');
+
+    if (this.value === 'PKR') {
+
+        cryptoSection.style.display = 'none';
+        pkrSection.style.display = 'block';
+
+    } else {
+
+        cryptoSection.style.display = 'block';
+        pkrSection.style.display = 'none';
+
+        addressField.value = addresses[this.value] || '';
+
+    }
 
 });
 
