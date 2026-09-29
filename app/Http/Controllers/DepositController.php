@@ -21,7 +21,7 @@ class DepositController extends Controller
 
     return view('deposit', compact(
         'deposits',
-        'depositAddresses'
+        'depositAddresses',
          'paymentAccounts'
     ));
     }
