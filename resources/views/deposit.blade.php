@@ -128,28 +128,18 @@
 </div>
 
 <script>
-
 const addresses = {
-
-@foreach($depositAddresses as $address)
-
-'{{ $address->currency }}': '{{ $address->address }}',
-
-@endforeach
-
+    @foreach($depositAddresses as $address)
+        '{{ $address->currency }}': '{{ $address->address }}',
+    @endforeach
 };
 
-document.getElementById('currency-select')
-.addEventListener('change', function() {
+const currencySelect = document.getElementById('currency-select');
+const cryptoSection = document.getElementById('crypto-address-section');
+const pkrSection = document.getElementById('pkr-payment-section');
+const addressField = document.getElementById('deposit-address');
 
-    const cryptoSection =
-        document.getElementById('crypto-address-section');
-
-    const pkrSection =
-        document.getElementById('pkr-payment-section');
-
-    const addressField =
-        document.getElementById('deposit-address');
+currencySelect.addEventListener('change', function () {
 
     if (this.value === 'PKR') {
 
@@ -164,20 +154,14 @@ document.getElementById('currency-select')
         addressField.value = addresses[this.value] || '';
 
     }
-
 });
 
 function copyAddress() {
 
-    const addressField =
-        document.getElementById('deposit-address');
-
     navigator.clipboard.writeText(addressField.value);
 
     alert('Address copied successfully!');
-
 }
-
 </script>
 
 @endsection
