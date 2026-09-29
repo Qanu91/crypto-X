@@ -19,7 +19,7 @@
         </select>
     </div>
 
-    <div class="mb-3 id="crypto-address-section">
+    <div class="mb-3" id="crypto-address-section">
 
     <label>Deposit Address</label>
 
