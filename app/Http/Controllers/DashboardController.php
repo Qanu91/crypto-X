@@ -40,8 +40,7 @@ $usdToPkr = $exchangeData['rates']['PKR'] ?? 280;
 $prices = $response->json();
 
 $usdtPrice = $prices['tether']['usd'] ?? 1;
-$trxPrice  = $prices['tron']['usd'] ?? 0;
-$usdtPricePkr = $usdtPrice * $usdToPkr;
+$trxPrice = $prices['tron']['usd'] ?? 0.30;$usdtPricePkr = $usdtPrice * $usdToPkr;
 $trxPricePkr = $trxPrice * $usdToPkr;
 
 $swapRates = [
