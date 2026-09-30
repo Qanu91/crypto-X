@@ -2,10 +2,6 @@
 @section('title', 'Withdrawal')
 @section('content')
 
-
-
-
-
 <div class="container">
 
     <h2>Withdraw Funds</h2>
@@ -20,7 +16,6 @@
             <select name="currency" id="currency-select" class="form-control">
                 <option value="TRX">TRX</option>
                 <option value="USDT">USDT</option>
-                <option value="PKR">PKR</option>
             </select>
         </div>
 
@@ -36,68 +31,18 @@
 
         <div id="crypto-fields">
 
-    <div class="mb-3">
+            <div class="mb-3">
 
-        <label>Wallet Address</label>
+                <label>Wallet Address</label>
 
-        <input
-            type="text"
-            name="wallet_address"
-            class="form-control">
+                <input
+                    type="text"
+                    name="wallet_address"
+                    class="form-control">
 
-    </div>
+            </div>
 
-</div>
-
-<div id="pkr-fields" style="display:none;">
-
-    <div class="mb-3">
-
-        <label>Withdrawal Method</label>
-
-        <select
-            name="withdrawal_method"
-            class="form-control">
-
-            <option value="Easypaisa">
-                Easypaisa
-            </option>
-
-            <option value="JazzCash">
-                JazzCash
-            </option>
-
-            <option value="Bank Transfer">
-                Bank Transfer
-            </option>
-
-        </select>
-
-    </div>
-
-    <div class="mb-3">
-
-        <label>Account Title</label>
-
-        <input
-            type="text"
-            name="account_title"
-            class="form-control">
-
-    </div>
-
-    <div class="mb-3">
-
-        <label>Account Number</label>
-
-        <input
-            type="text"
-             name="account_number"
-            class="form-control">
-
-    </div>
-
-</div>
+        </div>
 
         <button type="submit" class="btn btn-primary">
             Request Withdrawal
@@ -144,34 +89,5 @@
     </table>
 
 </div>
-<script>
 
-const currencySelect =
-    document.getElementById('currency-select');
-
-const cryptoFields =
-    document.getElementById('crypto-fields');
-
-const pkrFields =
-    document.getElementById('pkr-fields');
-
-currencySelect.addEventListener('change', function () {
-
-    if (this.value === 'PKR') {
-
-        cryptoFields.style.display = 'none';
-
-        pkrFields.style.display = 'block';
-
-    } else {
-
-        cryptoFields.style.display = 'block';
-
-        pkrFields.style.display = 'none';
-
-    }
-
-});
-
-</script>
 @endsection
