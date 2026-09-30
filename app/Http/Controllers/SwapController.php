@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Wallet;
 use App\Models\Transaction;
 use App\Models\ExchangeRate;
-use Illuminate\Support\Facades\Http;
 
 class SwapController extends Controller
 {
@@ -24,18 +23,6 @@ class SwapController extends Controller
         }
 
         $user = auth()->user();
-        $response = Http::get(
-    'https://api.coingecko.com/api/v3/simple/price',
-    [
-        'ids' => 'tether,tron',
-        'vs_currencies' => 'usd',
-    ]
-);
-
-$prices = $response->json();
-
-$usdtPrice = $prices['tether']['usd'] ?? 1;
-$trxPrice = $prices['tron']['usd'] ?? 0;
 
         $fromWallet = $user->wallets()
             ->where('currency', $request->from_currency)
@@ -53,59 +40,20 @@ $trxPrice = $prices['tron']['usd'] ?? 0;
             return back()->with('error', 'Insufficient balance.');
         }
 
-        $fromRate = null;
-        $toRate = null;
+        $fromRate = ExchangeRate::where('currency', $request->from_currency)->first();
+        $toRate   = ExchangeRate::where('currency', $request->to_currency)->first();
 
-        if ($request->from_currency != 'PKR') {
-            $fromRate = ExchangeRate::where(
-                'currency',
-                $request->from_currency
-            )->first();
-        }
-
-        if ($request->to_currency != 'PKR') {
-            $toRate = ExchangeRate::where(
-                'currency',
-                $request->to_currency
-            )->first();
-        }
-
-        if ($request->from_currency != 'PKR' && !$fromRate) {
+        if (!$fromRate) {
             return back()->with('error', 'From currency rate not found.');
         }
 
-        if ($request->to_currency != 'PKR' && !$toRate) {
+        if (!$toRate) {
             return back()->with('error', 'To currency rate not found.');
         }
 
-        /* Conversion Logic */
-
-        if (
-            $request->from_currency == 'PKR' &&
-            $request->to_currency != 'PKR'
-        ) {
-
-            $convertedAmount =
-                $request->amount / $toRate->buy_rate;
-
-        } elseif (
-
-            $request->to_currency == 'PKR' &&
-            $request->from_currency != 'PKR'
-
-        ) {
-
-            $convertedAmount =
-                $request->amount * $fromRate->sell_rate;
-
-        } else {
-
-            $pkrAmount =
-                $request->amount * $fromRate->sell_rate;
-
-            $convertedAmount =
-                $pkrAmount / $toRate->buy_rate;
-        }
+        // Convert via PKR as intermediate: from -> PKR -> to
+        $pkrAmount       = $request->amount * $fromRate->sell_rate;
+        $convertedAmount = $pkrAmount / $toRate->buy_rate;
 
         DB::transaction(function () use (
             $fromWallet,
@@ -114,7 +62,6 @@ $trxPrice = $prices['tron']['usd'] ?? 0;
             $convertedAmount,
             $user
         ) {
-
             $fromWallet->balance -= $request->amount;
             $fromWallet->save();
 
@@ -130,9 +77,6 @@ $trxPrice = $prices['tron']['usd'] ?? 0;
             ]);
         });
 
-        return back()->with(
-            'success',
-            'Swap completed successfully.'
-        );
+        return back()->with('success', 'Swap completed successfully.');
     }
 }

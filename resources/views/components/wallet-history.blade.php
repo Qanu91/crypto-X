@@ -75,26 +75,7 @@
 
                         </tr>
 
-                        <tr>
 
-                            <td>PKR</td>
-
-                            <td>₨ {{ number_format($pkrWallet->balance ?? 0, 2) }}</td>
-
-                            <td>
-
-                                <div class="wallet-actions">
-        <a href="{{ route('deposit.index') }}" class="btn btn-success btn-sm">
-            Deposit
-        </a>
-
-        <a href="{{ route('withdrawal.index') }}" class="btn btn-danger btn-sm">
-            Withdraw
-        </a>
-
-                            </td>
-
-                        </tr>
 
                     </tbody>
 

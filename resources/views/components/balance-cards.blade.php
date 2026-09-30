@@ -1,7 +1,7 @@
 <div class="row g-4">
 
-    <!-- USD CARD -->
-    <div class="col-lg-4">
+    <!-- USDT CARD -->
+    <div class="col-lg-6">
 
         <div class="balance-card usd">
 
@@ -13,9 +13,9 @@
                 USDT Balance
             </div>
 
-           <div class="bc-amount">
-    ${{ number_format($usdtWallet->balance ?? 0, 2) }}
-</div>
+            <div class="bc-amount">
+                ${{ number_format($usdtWallet->balance ?? 0, 2) }}
+            </div>
 
             <span class="bc-change up">
                 <i class="ti ti-trending-up"></i>
@@ -27,7 +27,7 @@
     </div>
 
     <!-- TRX CARD -->
-    <div class="col-lg-4">
+    <div class="col-lg-6">
 
         <div class="balance-card trx">
 
@@ -46,32 +46,6 @@
             <span class="bc-change up">
                 <i class="ti ti-trending-up"></i>
                 +5.1%
-            </span>
-
-        </div>
-
-    </div>
-
-    <!-- PKR CARD -->
-    <div class="col-lg-4">
-
-        <div class="balance-card pkr">
-
-            <div class="bc-icon pkr">
-                <i class="ti ti-building-bank"></i>
-            </div>
-
-            <div class="bc-label">
-                PKR Balance
-            </div>
-
-            <div class="bc-amount">
-                ₨ {{ number_format($pkrWallet->balance ?? 0) }}
-            </div>
-
-            <span class="bc-change dn">
-                <i class="ti ti-trending-down"></i>
-                -0.8%
             </span>
 
         </div>

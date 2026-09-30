@@ -9,12 +9,11 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $portfolioWallets = auth()->user()->wallets;
+        $portfolioWallets = auth()->user()->wallets->where('currency', '!=', 'PKR');
 
-        $wallets = Auth::user()->wallets;
+        $wallets = Auth::user()->wallets->where('currency', '!=', 'PKR');
         $usdtWallet = $wallets->where('currency', 'USDT')->first();
 $trxWallet = $wallets->where('currency', 'TRX')->first();
-$pkrWallet = $wallets->where('currency', 'PKR')->first();
 
 $transactions = auth()->user()
     ->transactions()
@@ -47,17 +46,10 @@ $swapRates = [
 
     'USDT' => [
         'TRX' => $usdtPrice / $trxPrice,
-        'PKR' => $usdToPkr,
     ],
 
     'TRX' => [
         'USDT' => $trxPrice / $usdtPrice,
-        'PKR' => $trxPrice * $usdToPkr,
-    ],
-
-    'PKR' => [
-        'USDT' => 1 / $usdToPkr,
-        'TRX' => (1 / $usdToPkr) / $trxPrice,
     ],
 
 ];
@@ -66,7 +58,6 @@ return view('dashboard', compact(
     'wallets',
     'usdtWallet',
     'trxWallet',
-    'pkrWallet',
     'transactions',
     'portfolioWallets',
     'usdtPrice',
